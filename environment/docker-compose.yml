@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: maven.dockerfile
+    volumes:
+      - type: volume
+        source: maven-jobs-cache
+        target: /var/maven/.m2
+      - type: bind
+        source: "${APP_PROJECT}"
+        target: /application
+    environment:
+      - MAVEN_CONFIG=/var/maven/.m2
+    user: "${HOST_UID}:${HOST_GID}"
+    command: ["mvn", "test"]
+
+volumes:
+  maven-jobs-cache:
